@@ -1,0 +1,24 @@
+{
+  "name": "dao-contracts",
+  "author": "Naveen Sahu",
+  "license": "MIT",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy:dev": "npx hardhat run scripts/deploy-dev.js --network hardhat",
+    "deploy:staging": "npx hardhat run scripts/deploy-staging.js --network rinkeby",
+    "deploy:prod": "npx hardhat run scripts/deploy-prod.js --network mainnet"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-waffle": "^2.0.2",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.5.4",
+    "hardhat": "^2.8.4"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.5.0",
+    "dotenv": "^16.0.0"
+  }
+}
