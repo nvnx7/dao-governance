@@ -1,4 +1,11 @@
 const { ethers, network } = require("hardhat");
+const logger = require("./logger");
+
+logger.stream = {
+  write: (message) => {
+    logger.info(message.trim());
+  },
+};
 
 const dAppName = "TestDApp";
 const tokenParams = { name: "TestToken", symbol: "TTK" };
@@ -58,10 +65,12 @@ async function main() {
     this.timelock.address
   );
 
-  console.log("\nDEPLOYMENTS:");
-  console.log("Token:", token.address);
-  console.log("Timelock:", timelock.address);
-  console.log("Governor:", governor.address);
+  logger.info(
+    `\nDEPLOYMENTS: (${network.name})
+    Token: ${token.address}
+    Timelock: ${timelock.address}
+    Governor: ${governor.address}`
+  );
 }
 
 main()
