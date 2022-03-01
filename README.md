@@ -27,7 +27,7 @@ yarn test
 
 ## Deployment
 
-Set the required environment variables in a `.env` file based off `.env.example`. Then run deployment:
+Set the required environment variables in a `.env` file based off `.env.example`. Configure contract params in `scrips/deploy-<env>.js` file according to needs. Then run deployment:
 
 - Development (local hardhat network)
 
