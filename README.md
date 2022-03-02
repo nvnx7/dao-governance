@@ -45,3 +45,5 @@ Set the required environment variables in a `.env` file based off `.env.example`
   ```
   yarn deploy:production
   ```
+
+**Note**: After each deployment contract addresses are logged to `deploys.log` file in the root dir.
