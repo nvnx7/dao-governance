@@ -25,6 +25,10 @@ const governorParams = {
 const useNFTVotes = false;
 
 async function main() {
+  // Behave close to rinkeby/mainnet
+  await network.provider.send("evm_setAutomine", [false]);
+  await network.provider.send("evm_setIntervalMining", [13000]);
+
   console.log("DEV DEPLOYMENT NETWORK:", network.name);
   const [deployer] = await ethers.getSigners();
   console.log("\nDeployer:", deployer.address);
@@ -65,11 +69,15 @@ async function main() {
     this.timelock.address
   );
 
+  const tokenTx = await this.token.deployTransaction.wait();
+  const timelockTx = await this.timelock.deployTransaction.wait();
+  const governorTx = await this.governor.deployTransaction.wait();
+
   logger.info(
     `\nDEPLOYMENTS: (${network.name})
-    Token: ${token.address}
-    Timelock: ${timelock.address}
-    Governor: ${governor.address}`
+    Token: ${token.address} (block: ${tokenTx.blockNumber})
+    Timelock: ${timelock.address} (block: ${timelockTx.blockNumber})
+    Governor: ${governor.address} (block: ${governorTx.blockNumber})`
   );
 }
 

@@ -27,41 +27,45 @@ async function main() {
     (await deployer.getBalance()).toString()
   );
 
-  this.GovernanceToken = await ethers.getContractFactory("DaoToken");
-  this.GovernanceTimelock = await ethers.getContractFactory("DaoTimelock");
-  this.Governor = await ethers.getContractFactory("DaoGovernor");
+  const GovernanceToken = await ethers.getContractFactory("DaoToken");
+  const GovernanceTimelock = await ethers.getContractFactory("DaoTimelock");
+  const Governor = await ethers.getContractFactory("DaoGovernor");
 
   console.log(
     `Deploying governance token (${useNFTVotes ? "ERC721" : "ERC20"})...`
   );
-  this.token = await this.GovernanceToken.deploy(
+  const token = await GovernanceToken.deploy(
     tokenParams.name,
     tokenParams.symbol
   );
 
   console.log("Deploying governance timelock...");
-  this.timelock = await this.GovernanceTimelock.deploy(
+  const timelock = await GovernanceTimelock.deploy(
     timelockParams.minDelay,
     timelockParams.proposers,
     timelockParams.executors
   );
 
   console.log("Deploying governor...");
-  this.governor = await this.Governor.deploy(
+  const governor = await Governor.deploy(
     governorParams.name,
     governorParams.votingDelay,
     governorParams.votingPeriod,
     governorParams.proposalThreshold,
-    this.token.address,
+    token.address,
     governorParams.quorumFraction,
-    this.timelock.address
+    timelock.address
   );
+
+  const tokenTx = await token.deployTransaction.wait();
+  const timelockTx = await timelock.deployTransaction.wait();
+  const governorTx = await governor.deployTransaction.wait();
 
   logger.info(
     `\nDEPLOYMENTS: (${network.name})
-    Token: ${token.address}
-    Timelock: ${timelock.address}
-    Governor: ${governor.address}`
+    Token: ${token.address} (block: ${tokenTx.blockNumber})
+    Timelock: ${timelock.address} (block: ${timelockTx.blockNumber})
+    Governor: ${governor.address} (block: ${governorTx.blockNumber})`
   );
 }
 
