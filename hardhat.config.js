@@ -9,6 +9,9 @@ const mainnetDeployerPk = process.env.MAINNET_DEPLOYER_PRIVATE_KEY;
 module.exports = {
   defaultNetwork: "hardhat",
   networks: {
+    hardhat: {
+      chainId: 1337,
+    },
     rinkeby: {
       url: rinkebyUrl,
       accounts: rinkebyDeployerPk ? [rinkebyDeployerPk] : [],
