@@ -4,15 +4,19 @@ pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DaoToken is ERC20, ERC20Permit, ERC20Votes {
-    uint256 public maxSupply = 1000 * (10**18);
+contract DaoToken is ERC20, ERC20Permit, ERC20Votes, Ownable {
+    constructor(
+        string memory name,
+        string memory symbol,
+        uint256 initialSupply
+    ) ERC20(name, symbol) ERC20Permit(name) {
+        _mint(msg.sender, initialSupply);
+    }
 
-    constructor(string memory name, string memory symbol)
-        ERC20(name, symbol)
-        ERC20Permit(name)
-    {
-        _mint(msg.sender, maxSupply);
+    function mint(address to, uint256 amount) public onlyOwner {
+        _mint(to, amount);
     }
 
     function _mint(address account, uint256 amount)
