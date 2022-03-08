@@ -4,7 +4,11 @@ const { ethers } = require("hardhat");
 const { BigNumber, utils } = ethers;
 
 const dAppName = "TestDApp";
-const tokenParams = { name: "TestToken", symbol: "TTK" };
+const tokenParams = {
+  name: "TestToken",
+  symbol: "TTK",
+  initialSupply: BigInt(1000 * 10 ** 18),
+};
 const timelockParams = { minDelay: 600, proposers: [], executors: [] };
 const governorParams = {
   name: dAppName,
@@ -22,6 +26,10 @@ const ProposalState = {
   Queued: 5,
   Expired: 6,
   Executed: 7,
+};
+const Roles = {
+  PROPOSER_ROLE: "",
+  EXECUTOR_ROLE: "",
 };
 const VoteType = {
   Against: 0,
@@ -75,7 +83,8 @@ describe("DAO_ERC20Votes", function () {
 
     this.token = await this.GovernanceToken.deploy(
       tokenParams.name,
-      tokenParams.symbol
+      tokenParams.symbol,
+      tokenParams.initialSupply
     );
 
     // Evenly divide voting power
@@ -110,11 +119,14 @@ describe("DAO_ERC20Votes", function () {
     );
     this.target = await this.Target.deploy();
 
-    const PROPOSER_ROLE = this.timelock.PROPOSER_ROLE();
-    const EXECUTOR_ROLE = this.timelock.EXECUTOR_ROLE();
+    Roles.PROPOSER_ROLE = await this.timelock.PROPOSER_ROLE();
+    Roles.EXECUTOR_ROLE = await this.timelock.EXECUTOR_ROLE();
 
-    this.timelock.grantRole(PROPOSER_ROLE, this.governor.address);
-    this.timelock.grantRole(EXECUTOR_ROLE, ethers.constants.AddressZero);
+    await this.timelock.grantRole(Roles.PROPOSER_ROLE, this.governor.address);
+    await this.timelock.grantRole(
+      Roles.EXECUTOR_ROLE,
+      ethers.constants.AddressZero
+    );
 
     mock.targets = [this.target.address];
     mock.datas = [
@@ -125,7 +137,17 @@ describe("DAO_ERC20Votes", function () {
   });
 
   describe("Deployment", function () {
-    it("deploys without errors", async function () {});
+    it("deploys without errors", async function () {
+      expect(
+        await this.timelock.hasRole(Roles.PROPOSER_ROLE, this.governor.address)
+      ).to.be.true;
+      expect(
+        await this.timelock.hasRole(
+          Roles.EXECUTOR_ROLE,
+          ethers.constants.AddressZero
+        )
+      ).to.be.true;
+    });
   });
 
   describe("Proposal", function () {
