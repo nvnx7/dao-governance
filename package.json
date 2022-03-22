@@ -5,9 +5,9 @@
   "scripts": {
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
-    "deploy:dev": "npx hardhat run scripts/deploy-dev.js --network hardhat",
-    "deploy:staging": "npx hardhat run scripts/deploy-staging.js --network rinkeby",
-    "deploy:prod": "npx hardhat run scripts/deploy-prod.js --network mainnet"
+    "deploy:dev": "npx hardhat run scripts/deploy.js --network hardhat",
+    "deploy:staging": "npx hardhat run scripts/deploy.js --network rinkeby",
+    "deploy:prod": "npx hardhat run scripts/deploy.js --network mainnet"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.5",
